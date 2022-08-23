@@ -8,8 +8,9 @@
 - <a href="#">LinkedIn Post</a>
 - <a href="#">YouTube Video</a>
 
-![Transformation](https://user-images.githubusercontent.com/60184582/186181673-270a17b1-2e1b-4f17-a0b8-2f9552e49097.png)
+<img src="https://user-images.githubusercontent.com/60184582/186198511-d788e08c-03cc-411a-9958-e314716cd335.png" width="400" height="400"/>
 
 --------------------------------------------------
 
-[![Internspedia-IMYPB10041-ML-Offer-Letter](https://user-images.githubusercontent.com/60184582/186191187-f37e5678-9148-42f1-958d-1b5f28c58326.png)](https://drive.google.com/file/d/14JPbsO1XyqjmVwLfab315q4z6yOr8WIV/view?usp=sharing)
+### Offer Letter |> Intern'spedia
+<a href="https://drive.google.com/file/d/14JPbsO1XyqjmVwLfab315q4z6yOr8WIV/view?usp=sharing"><img src="https://user-images.githubusercontent.com/60184582/186191187-f37e5678-9148-42f1-958d-1b5f28c58326.png" width="500" height="750"/></a>
