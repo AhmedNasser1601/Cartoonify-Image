@@ -13,8 +13,8 @@ mainContainer.title('Image Cartoonist')
 mainContainer.configure(background='LightYellow')
 
 # Image Size |> Fixed
-W = 960  # Width
-H = 540  # Height
+W = 960  # Width -> 960
+H = 540  # Height -> 540
 
 
 def uploadImage():
