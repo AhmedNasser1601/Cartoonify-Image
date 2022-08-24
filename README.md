@@ -6,7 +6,7 @@
 >> Transform images into its cartoon, by using OpenCV, easygui, Imageio, Matplotlib
 
 - <a href="#">LinkedIn Post</a>
-- <a href="#">YouTube Video</a>
+- <a href="https://youtu.be/gBgjnNeH8Lw">YouTube Video</a>
 
 ![Image Cartoonist Program](https://user-images.githubusercontent.com/60184582/186204136-de45bd30-3954-4b7d-9f9a-06587c1c3f92.png)
 
