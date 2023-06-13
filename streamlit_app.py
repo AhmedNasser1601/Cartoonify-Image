@@ -1,71 +1,68 @@
 import cv2
+import easygui
 import streamlit as st
 import matplotlib.pyplot as plt
 
+# Image Size |> Fixed
 W = 960  # Width -> 960
 H = 540  # Height -> 540
 
+def uploadImage():
+    imgPath = easygui.fileopenbox()
+    Cartoonify(imgPath)
 
-def cartoonify_image(img_path):
-    orig_img = cv2.imread(img_path)
-    orig_img = cv2.cvtColor(orig_img, cv2.COLOR_BGR2RGB)
+def Cartoonify(imgPath):
+    origImg = cv2.imread(imgPath)  # Read the Image
+    origImg = cv2.cvtColor(origImg, cv2.COLOR_BGR2RGB)
 
-    if orig_img is None:
+    if origImg is None:  # Check valid image
         st.error("Can't find any image. Please choose a valid one.")
         return
 
-    resized1 = cv2.resize(orig_img, (W, H))
+    ReSized1 = cv2.resize(origImg, (W, H))  # 1st Image (Original)
 
-    gray_scale_img = cv2.cvtColor(orig_img, cv2.COLOR_BGR2GRAY)
-    resized2 = cv2.resize(gray_scale_img, (W, H))
+    # Conversion to Grayscale
+    grayScaleImage = cv2.cvtColor(origImg, cv2.COLOR_BGR2GRAY)
+    ReSized2 = cv2.resize(grayScaleImage, (W, H))  # 2nd image
 
-    smooth_gray_scale = cv2.medianBlur(gray_scale_img, 5)
-    resized3 = cv2.resize(smooth_gray_scale, (W, H))
+    # Blur to Smoothen the Image
+    smoothGrayScale = cv2.medianBlur(grayScaleImage, 5)
+    ReSized3 = cv2.resize(smoothGrayScale, (W, H))  # 3rd Image
 
-    get_edge = cv2.adaptiveThreshold(smooth_gray_scale, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 9, 9)
-    resized4 = cv2.resize(get_edge, (W, H))
+    # Try to get the edges of the image, by using thresholding technique
+    getEdge = cv2.adaptiveThreshold(smoothGrayScale, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 9, 9)
+    ReSized4 = cv2.resize(getEdge, (W, H))  # 4th image
 
-    color_image = cv2.bilateralFilter(orig_img, 9, 300, 300)
-    resized5 = cv2.resize(color_image, (W, H))
+    # Applying Bilateral |> Remove Noise and Sharpen the Edges
+    colorImage = cv2.bilateralFilter(origImg, 9, 300, 300)
+    ReSized5 = cv2.resize(colorImage, (W, H))  # 5th Image
 
-    cartoon_image = cv2.bitwise_and(color_image, color_image, mask=get_edge)
-    resized6 = cv2.resize(cartoon_image, (W, H))
+    # Applying the Mask of Edged Image
+    cartoonImage = cv2.bitwise_and(colorImage, colorImage, mask=getEdge)
+    ReSized6 = cv2.resize(cartoonImage, (W, H))  # 6th Image
 
-    images = [resized1, resized2, resized3, resized4, resized5, resized6]
+    # Plotting whole Images
+    images = [ReSized1, ReSized2, ReSized3, ReSized4, ReSized5, ReSized6]
 
-    fig, axes = plt.subplots(3, 2, figsize=(8, 8), subplot_kw={'xticks': [], 'yticks': []},
-                             gridspec_kw=dict(hspace=0.1, wspace=0.1))
-
-    for i, ax in enumerate(axes.flat):
-        ax.set_title('fig(' + str(1 + i) + ')')
-        ax.imshow(images[i], cmap='gray')
-
-    st.pyplot(fig)
+    for i, image in enumerate(images):
+        st.subheader(f"fig({i+1})")
+        st.image(image, use_column_width=True, caption=f"Figure {i+1}")
 
     if st.button("Save |> Cartooned Image"):
-        save_image(resized6, img_path)
+        saveImage(ReSized6, imgPath)
 
+def saveImage(ReSized6, imgPath):
+    newName = "Cartooned_Image"
+    path = os.path.dirname(imgPath)
+    extension = os.path.splitext(imgPath)[1]  # get Extension of the Image
+    imgIdentity = os.path.join(path, (newName + extension))  # join the Full Image Identifier
+    cv2.imwrite(imgIdentity, cv2.cvtColor(ReSized6, cv2.COLOR_RGB2BGR))
+    st.success(f"Saved as {newName}{extension} in {path}")
 
-def save_image(resized_img, img_path):
-    new_name = "Cartooned Image"
-    path = os.path.dirname(img_path)
-    extension = os.path.splitext(img_path)[1]
-    img_identity = os.path.join(path, (new_name + extension))
-    cv2.imwrite(img_identity, cv2.cvtColor(resized_img, cv2.COLOR_RGB2BGR))
-    st.success("Saved |> " + new_name + extension + " |> " + path)
+# Main
+st.title("Image Cartoonifier")
+st.markdown("By: Ahmed Nasser")
 
-
-def main():
-    st.title("Image Cartoonist")
-    st.markdown("By:\nAhmed Nasser\n_________________________")
-
-    uploaded_file = st.file_uploader("Cartoonify |> Choose Image", type=['jpg', 'jpeg', 'png'])
-    if uploaded_file is not None:
-        img_path = "./temp_img." + uploaded_file.name.split(".")[-1]
-        with open(img_path, "wb") as f:
-            f.write(uploaded_file.getbuffer())
-        cartoonify_image(img_path)
-
-
-if __name__ == "__main__":
-    main()
+uploadImgBtn = st.button("Cartoonify |> Choose Image")
+if uploadImgBtn:
+    uploadImage()
